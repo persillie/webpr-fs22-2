@@ -1,0 +1,37 @@
+== Javascript Funktionen
+
+Sobald () steht, ist das eine Referenz auf ein Element vom Typ Funktion.
+Funktionen sind Werte wie jeder andere auch, d. h. man kann sie sehr vielseitig einsetzen:
+
+* Konstanten oder Variablen zuweisen
+* in Listen verwalten
+* als Parameter für andere Funktionen (Higher Order Function)
+* als Rückgabewerte eingesetzen
+
+Wichtig: Unterscheiden können
+
+* Deklaration der Funktion
+* Referenz auf eine Funktion
+* Aufruf einer Funktion
+
+Javascript basiert auch auf Lamda Kalkül Prinzip (wie Haskell).
+
+Curried Style kommt von Haskell Brooks Curry und trennt mehrere Parameter in runden Klammern.
+
+Higher Order Funktion (geht auf Frege zurück), wenn eine Funktion eine Funktion als Parameter hat.
+
+Aufgabe:
+
+Snake Spiel, was brauchen wir noch.  -> Slides als Hilfsmittel.
+
+* Möglichkeit zu zeichnen.
+* Reagieren auf Key Events.
+* Game loop: Higher order function, nimmt eine Funktion entgegen.
+
+je nach Selbsteinschätzung
+
+a) Schreiben ohne Blick aufs Repository
+b) mit Start vom Repo ohne Lösung
+c) Lösung anschauen und nachprogrammieren.
+
+

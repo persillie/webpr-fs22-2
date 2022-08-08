@@ -6,47 +6,99 @@
 </head>
 <body>
     <script>
-        document.writeln(0 === 0);
+        // Learn by writing tests without using a test- or other framework
 
+        // this line is used to write the test output
+        document.writeln("true");
+        // of course it should evaluate an expression
+        document.writeln(1 !== 0);
+
+
+        // Language elements: function
+        // spec: semicolon is the statement terminator,
+        // use it, because automatic semicolon insertion does not work correctly
         function fun1()    { return 1; }
 
-        document.writeln( fun1()   === 1 );
+        // calling fun1() is not a method call, but a reference to a type function.
+        // in javascript fun1 is evaluated and then treated as an element of type function.
+        document.writeln( fun1() === 1 );
+        // what happens if we call the function with a parameter?
+        // In Java: compile error -> JS no compiler, thus no compiler error.
+        // JS is built for automation in the browser in run time
+        // (disclaimer: there is a compiler at run time, but no dedicated compile task)
+        // JS: unnecessary arguments are ignored!
+        // scripting languages: bet effort
         document.writeln( fun1(42) === 1 );
+
 
         function fun2()    { return 1; }
         function fun2(arg) { return arg; }
 
+        // why does document.writeln( fun2() === 1  ); not work?
+        // functions are references - references can only be occupied once.
+        // Hence the second definition of fun2 overwrites the first one ->
+        // there is no method overloading
         document.writeln( fun2() !== 1  );
+
         document.writeln( fun2() === undefined );
         document.writeln( fun2(42) === 42 );
 
-        function noReturn()    { 1; }
-        const noReturn2 = () => { 1; };
-        const noReturn3 = () => 1;
 
+        // 1; is not a valid statement
+        // return forgotten, but since no compiler, no error message
+        // JS returns undefined, unlike other script languages it does not return the last evaluated expression.
+        function noReturn()    { 1; }
         document.writeln( noReturn() !== 1 );
+
+        // alternative notation of functions (infix notation or fat arrow syntax).
+        // ():  type function
+        // =>: infix notation (expression)
+        // {1;}: block of statements, has no intrinsic value
+        // const cannot be defined a second time
+        const noReturn2 = () => { 1; };
+        // does still not work, because block of statements.
         document.writeln( noReturn2() !== 1 );
+        // as above but instead a block of statements there is an expression which can be evaluated
+        const noReturn3 = () => 1;
+        // this works
         document.writeln( noReturn3() === 1 );
 
+        /*
+        const noReturn2 = (): ist eine Zuweisung, daher kann es aufgerufen werden wie eine Funktion.
+        Funktionen sind eigentlich nur Werte -> was kann ich mit Werten alles machen? Zuweisen, Listen etc..
+         */
+
+        //
         const myfun = fun1;
         const funs = [null, undefined, fun1, fun2];
-        // //
-        document.writeln( myfun() === 1 );
-        document.writeln( funs[2]() === 1 );
 
-        function doit(whatToDo) {
-            return function bla(arg) { return whatToDo(arg); }
-        }
+       document.writeln( myfun() === 1 );
+        // funs[2] wird auf fun1 ausgewertet, das ist eine Funktion, daher kann ich es wie eine Funktion auswerten.
+       document.writeln( funs[2]() === 1 );
 
-        document.writeln( doit(fun1)(10) === 1 );
-        document.writeln( doit(fun2)(10) === 10 );
+       // wir wissen nicht, aus der Deklaration, was whatToDo für einen Typ ist.
+        // erst wenn wir die return Zeile anschauen sehen wir, dass es eine Funktion sein muss.
+       function doit(whatToDo) {
+         return function bla(arg) {
+             return whatToDo(arg);
+         }
+       }
+        // Wie können wir doit aufrufen
+        document.writeln( doit(fun1)(10) === 1 ); // whatToDo ist fun1, 10 ist arg
+        document.writeln( doit(fun2)(10) === 10 ); // whatToDo ist fun2, 10 ist arg
+        // Diese Funktionen möchte man z. B. in einer Schleife aufrufen oder in einem Protokoll
+        // Die beiden Parameter in Klammern hintereinander nennt man curried style von Argumenten, benannt nach Haskell Brooks Curry
 
-        const doit2 = callme => arg => callme(arg) ;
-
+        // Vereinfachte Darstellung von doit mit der fat error syntax:
+        // Funktion, die eine Funktion entgegennimmt und eine Funktion zurücknimmt
+        // einfacher zu lesen, weil die Argumente in der Reihenfolge kommen.
+        const doit2 = callme => arg => callme(arg);
+        // Aufruf in curried style
         document.writeln( doit2(fun1)(10) === 1 );
-
+        // Hier wird das fun1 in eine Konstante gebunden, also doit2 mit fun1 parametrisiert.
+        // Damit kann man dependency injection und inversion of control super einfach implementieren.
+        // fun1 wird injiziert, damit ich dann doFun2 mit unterschiedlichen Parameter aufrufen kann.
         const doFun2 = doit2(fun1);
-
         document.writeln( doFun2(10) === 1 );
         document.writeln( doFun2()   === 1 );
 
