@@ -22,11 +22,8 @@ function snakeEquals(a, b) {
 }
 
 function changeDirection(orientation) {
-    for (let i = 0; i < orientation.length-1; i++)
-    if (direction === orientation[i]){
-        direction = orientation[i+1];
-        break;
-    }
+    let i = orientation.indexOf(direction);
+    direction = orientation[i+1];
 }
 
 function start() {

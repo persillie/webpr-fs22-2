@@ -1,0 +1,174 @@
+== WebProgramming Woche 1
+
+Sobald () steht, ist das eine Referenz auf ein Element vom Typ Funktion.
+Funktionen sind Werte wie jeder andere auch, d. h. man kann sie sehr vielseitig einsetzen:
+
+* Konstanten oder Variablen zuweisen
+* in Listen verwalten
+* als Parameter für andere Funktionen (Higher Order Function)
+* als Rückgabewerte eingesetzen
+
+Wichtig: Unterscheiden können
+
+* Deklaration der Funktion
+* Referenz auf eine Funktion
+* Aufruf einer Funktion
+
+Javascript basiert auch auf Lamda Kalkül Prinzip (wie Haskell).
+
+Curried Style kommt von Haskell Brooks Curry und trennt mehrere Parameter in runden Klammern.
+
+Higher Order Funktion (geht auf Frege zurück), wenn eine Funktion eine Funktion als Parameter hat.
+
+Aufgabe:
+
+Snake Spiel, was brauchen wir noch.  -> Slides als Hilfsmittel.
+
+* Möglichkeit zu zeichnen.
+* Reagieren auf Key Events.
+* Game loop: Higher order function, nimmt eine Funktion entgegen.
+
+je nach Selbsteinschätzung
+
+a) Schreiben ohne Blick aufs Repository b) mit Start vom Repo ohne Lösung c) Lösung anschauen und nachprogrammieren.
+
+Notizen Implementierung
+
+* From scratch erst mal gescheitert
+* Lösung vervollständigt -> einfach.
+* Arrays haben wichtige Funktionen:
+** every: ruft eine callback Function auf jedem wert auf und checkt ob der return value der callback Function "truthy" ist.
+** shift: nimmt das erste Element weg und schiebt alle nach vorne.
+** unshift: fügt ein Element an erster Stelle ein und schiebt alle nach hinten.
+
+
+== Webprogramming Woche 2
+
+=== JSGoodie zum Thema Console
+
+Auf Browser Dev Tool Console.
+
+* `const x = 1; console.log("x", x);` log, info, warn zeigen den output an, je nachdem mit Hinweis markiert.
+* `console.error("x", x);` zeigt den Stacktrace an
+* debug ist ein weiterer nützlicher log level.
+* `console.dir([1,2,3]);` zeigt eine Struktur an wie ein Directory, gibt auch an, welche Funktionen der Prototyp hat. Gut für komplexere Objekte.
+//todo: image
+* `console.table([{x:0, y:1},{x:1, y:2},{x:2, y:3}]);` gibt die Objekte tabellarisch aus.
+//todo: image
+
+Mehr auf https://developer.mozilla.org/en-US/docs/Web/API/console[Developer Mozilla Org].
+
+=== Sprachfeatures
+
+JS Objekte werden so definiert: `{x:1, y:1, bla:"streng"}`
+
+=== Snake Game
+
+Hinweis: Die Schlange bewegt sich nicht so wie eine wirkliche Schlange, also die Schlange sich Teil für Teil verschiebt, sondern, das letzte Teil wird weggenommen und an erster Stelle wird ein neuer Kopf hingefügt.
+
+=== Ball Game
+
+Ein Ball bewegt sich mit einer Anfangsgeschwindigkeit und bewegt sich wie eine physics Engine.
+Bälle bewegen sich wie eine Parabel. Aber wir müssen keine Formel wissen, sondern nur:
+
+* x bleibt immer gleich
+* y nimmt zu, je weiter unten der Ball ist.
+* wenn man an die Seite kommt, wird die Richtung gewechselt
+* unten y muss Richtung wechseln und y noch etwas kleiner werden
+* am Schluss ist der Ball ganz unten und geht nur noch nach links und rechts.
+
+Spiel: Gleicher Aufbau wie bei Snake, jeder neu berechnete Zustand wird gezeichnet.
+Selbes Problem wie Snake mit anderen Business Regeln.
+Keine Musterlösung.
+
+=== Fun Remarks
+
+* Programmierer*in == "God of the universe"! Grosse Menge an Selbstwirksamkeit. Neue Erkenntnisse.
+* Trainieren kann man nicht delegieren.
+* Stackoverflow: in JS ist die Hälfte der Antworten falsch.
+* Wenn Sie durch die Schulbildung bis hierhin gekommen sind und immer noch nicht finden, dass Algebra etwas Schönes ist, dann hat die Ausbildung versagt. Algebra ist die kondensierte Logik. Uns unterscheidet vom Affen, dass wir logische Schlussfolgerungen ziehen können, die auf Erkenntnissen basieren. Kultureller Fortschritt kann auf Algebra zurückgeführt werden, da Symbole manipuliert werden.
+
+=== JS Scopes
+
+Inhärent nur zwei Arten von Scope (Ecmascript Level 6)
+
+* `global`: Es gibt immer einen globalen Scope: `window' (in Browser) +
+z. B. id Attribute im HTML sind global im `window` definiert +
+wenn nichts definiert ist -> this., wenn das `window` ist, dann steht eigentlich `window.document.writeln`
+* `function`: no matter where defined, variables are local to the enclosing function. *Blöcke sind keine Scopeeinheiten!*
+
+4 Möglichkeiten eine Referenz anzulegen:
+
+. `x = value|expression`: global scope, mutable, Achtung: können aus Versehen überschrieben werden. *Don't do it!*
+. `var x = value|expression`: "hoisted" scope, mutable.  `var` hat ein fundamental anderes Verhalten in anderer Sprache. Hoisted: (Hissen) Javascript tut so, wie wenn das var früher definiert worden ist. Es sieht so aus, wie wenn was anders passiert, als geschrieben ist. Das hat damit zu tun, dass JavaScript ein zwei Phaseninterpreter ist und in der ersten Phase alles Memory alloziert ist, also x bekannt ist. *Don't do it!*
+. `let x = value|expression`: local scope, mutable
+. `const x = value|expression`: local scope, immutable -> die Referenz ist immutable, der Inhalt der Referenz kann sich ändern (z. B. Array)
+
+Damit wir jeweils in überschaubaren Einheiten programmieren wollen und Funktionen die einzigen Scope Möglichkeiten sind, müssen wir alles innerhalb Funktionen definieren.
+
+=== IIFE: Immediately Invoked Function Expression
+
+* `function foo(){...}; foo()` irgendwie benennen, dann muss sie aufgerufen werden.
+* `_(_ function *foo()*{...}_)_ ()` links der {} ist die Referenz auf Funktion, mit den runden Klammern re wird Funktion aufgerufen. Die kursiv gesetzten Klammern zeigen, dass das eine Expression ist (das `function` keyword leitet keine expression ein). Damit wird aus der Funktionsdefinition ein Funktionsausdruck (function expression), die sofort mit den nächsten runden Klammern aufgerufen werden kann. Das ganze ist dann eine *immediately invoked function expression (iife)*
+* `(function foo(){...}) ()` kann umgeschrieben werden zu `(function(){...}) ()`. Das foo kann einfach weggelassen werden, da die Funktion sofort aufgerufen wird. Das ist die *Präfixnotation einer IIFE*.
+* `(() => {}) ()` Die Präxifnotation kann durch eine *Infixnotation* ersetzt werden, indem statt dem Keyword `function` das vor dem Input steht, ein `=>` eingefügt wird, der *zwischen dem Input und dem Output steht*.
+
+
+=== Lamda Calculus (Lamda Kalkül)
+
+Lamda: Zufälliger Buchstabe
+Kalkül: Schlussfolgerungen zu ziehen.
+
+Lamda Kalkül kann alles berechnen, was eine Turing Maschine berechnen kann und umgekehrt (gleichmächtig, isomorph).
+
+Lamda Kalkül ist der harte mathematische Kern von JS.
+
+LK: sind Symbole, die dastehen, die man manipulieren kann.
+
+3 Operationen:
+
+* alpha translation:
+* beta:
+* eta: cancel parameter ()
+
+
+* alpha translation:: rename parameter (analog zu refactoring umbenennen),keine Expansion und keine Reduktion -> Translation +
+Lx.x, angepasste Schreibweise `const id = x => x`, `const id = y => y`
+* *beta reduktion*:: apply argument. (Einsetzen von Funktionen, binde Parameter an Funktion und ersetze Funktion durch konkreten Wert) -> Vereinfachung von komplizierteren Argumenten. (Refactoring: replace parameter)+
+----
+(f => x =>  f(x))id(1) // id an f binden, alle f mit id ersetzen, f löschen.
+(     x => id(x)) (1)  // Argument 1 an x binden, ersetzen alle x, x löschen
+(          id(1))      // vorher haben wir gesehen, id entspricht x => x -> id ersetzen
+(x => x)(1)            // Funktion aufrufen (1 an x binden und alle x ersetzen)
+(1)
+----
+Diese Umformungen sind äquivalent, man könnte auch expandieren (Refactoring: introduce parameter).
+Äquivalenzumformungen kennen wir aus linearen Algebra -> Anwendung von Algebra.
+Hier keine Willkür (wie z. B. var), sondern ergibt sich aus der Logik.
+Damit kann man rock solid JS programmieren.
+* eta reduktion:: Regel: Wenn das letzte Argument im Funktionsaufruf das gleiche ist wie der letzte Parameter, dann darf ich die streichen. In der Algebra würde man sagen, ich kann die rauskürzen (Division). Kein Zufall dass ()() eine Multiplikation sein.
+----
+x => y => plus(x)(y)
+x =>      plus(x)
+          plus
+----
+Auch hier: es ist eine Äquivalenzumformung, es gibt auch eine Expansion.
+
+Alle Äquivalenzumformung sind unabhängig, seiteneffektfrei und sind zeitlos. Wie in der Mathematik. Könnte man sofort ausführen.
+
+Alle Funktionen in LK können mit 3 Kombinatoren ausgedrückt werden.
+id und Konst sind zwei davon (Ibis und Kestrel)
+
+
+== JS History
+
+JS wurde in 10 Tagen entwickelt im Auftrag von Netscape.
+MIT unterrichtet Programmieren mit dem Bauen einer Programmiersprache, nämlich Scheme (Lisp Variante) wird gebaut. Buch: Harold Abelson and Gerald Jay Sussman, Structure and Interpretation of Computer Programs
+
+
+
+
+
+
+
+

@@ -7,14 +7,59 @@
 <body>
     <script>
 
+        // Scopes, damit man nicht alles verstehen muss.
+        let x = 0; // hier definiert
+
+        // Problem: wenn ich let x schreibe
+        // - falls es irgendwo schon definiert wurde, darf ich nicht nochmals let x schreiben
+        // - wenn ich es ohne let schreibe, kann es sein, dass ich eine globale variable x überschreibe mit Seiteneffekt.
+        // Lösung: in einen anonymen Funktionsscope setzen und zwar in einen IIFE (immediatily invoked function expression).
+        // Dadurch gewinnt man einen lokalen Scope und kann lokal Code verstehen, ohne zu verstehen, was drumrumsteht.
+        (() => { // Beginn Scope
+        let x = 1;
+        document.writeln(x);
+        })();  // End Scope
+        document.writeln(x); // hier ausgeben, das ist doof, Don't do it.
+
+        // Modernes Ecma Script, Backwards compatibility ist noch nicht verlässlich
+        {
+            let x = 1;
+            document.writeln(x);
+        }
+        document.writeln(x);
+
+        // Lamda Kalkül in echtem Javascript, weil JS eine Obermenge ist von LK.
+        // Lamda Kalkül kennt nur diese Funktionen.
+
+        // Idiot or Ibis or id
         const id    =  x => x;
-        const Konst = id => x => id;
+        // erster Test: id von id soll id sein
+        //const Konst = id => x => id;
 
-        const Kite  = Konst(id);
+        // Kestrel
+        const Konst = x => y => x;
 
+        // Kite, kann mit id und Konst ausgedrückt werden und wird parameterlos.
+        // Parameterlose Programmierung ist sicherer.
+        // const Kite  = x => y => y;  // beta extension, das rechte y wird als Funktion ausgedrückt
+        //const Kite  = x => y => id(y); // eta reduction, jetzt können wir das y loswerden
+        //const Kite  = x => id; //beta
+        // Damit wir verstehen, wie wir weitergehen können, bauen wir mit alpha Translation Konst um
+        // const Konst = id => y => id; // id statt x
+        //const Konst = id => x => id; // x statt y. Nun können wir das x => id von Kite mit der Def von Konst ersetzen
+        const Kite = Konst(id); // wo ist der zweite Parameter????
+
+        // Test 1: funktion soll sich selbst zurückgeben.
         document.writeln( id(id) === id);
+        document.writeln( id(2) === 2);
+        // Funktion, die immer den ersten Parameter zurückgibt, egal was man sonst aufruft
         document.writeln( Konst(id)(undefined) === id);
+        document.writeln( Konst(7)(undefined) === 7);
+        // Funktion, die immer den zweiten Parameter zurückgibt, egal was man sonst macht.
         document.writeln( Kite(undefined)(id) === id);
+        document.writeln( Kite(3)(5) === 5);
+
+
 
     </script>
 </body>
