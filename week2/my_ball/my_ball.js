@@ -15,7 +15,7 @@ function start() {
         //nextBoard();
         move(my_ball);
         display(context);
-    }, 1000 / 5);
+    }, 1000 / 20);
 
 }
 
@@ -24,8 +24,9 @@ function same_position(ball, pos){
 }
 
 function move(ball){
-    ball.x +=1;
-    ball.y +=1;
+    let dx = ball.y/80;
+    ball.x += 7-dx;
+    ball.y +=ball.y >7 ?ball.y/7:1; //Die Geschwindigkeit nimmt in 5er Schritten zu
 }
 
 
