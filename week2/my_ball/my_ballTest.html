@@ -11,16 +11,28 @@
 <script language="javascript" src="my_ball.js"></script>
 <pre>
 <script>
-    // test initial place of my_ball
+    document.writeln("initial place of my_ball");
     document.writeln(same_position(my_ball, {x:1, y:1}));
 
-    //move the ball 10px
-    move(my_ball);
-    document.writeln(same_position(my_ball, {x:2, y:2}));
-    move(my_ball);
-    document.writeln(same_position(my_ball, {x:3, y:3}));
+    document.writeln("test move down");
+    document.writeln(down(5) === 6);
+    document.writeln(down(12) === 13.2);
+    document.writeln(down(10) === 11);
 
+    document.writeln("test move up");
+    document.writeln(up(5) === 4);
+    document.writeln(up(12) === 10.8);
+    document.writeln(up(10) === 9);
 
+    document.writeln("test horizontal direction");
+    switchHorizontal();
+    document.writeln(direction.h === 'left');
+    document.writeln(direction.v === 'down');
+
+    document.writeln("test vertical direction");
+    switchVertical();
+    document.writeln(direction.h === 'left');
+    document.writeln(direction.v === 'up');
 
 </script>
 </pre>
